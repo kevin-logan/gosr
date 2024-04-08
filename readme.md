@@ -66,12 +66,12 @@ The fact `gosr search` and `gosr replace` can collect filenames from a named pip
 
 ## Common Flags
 
-`-q` / `--quiet` is quiet mode and will suppress all output (besides user prompts)
-`-y` / `--confirm` will suppress confirmation and apply all changes without prompting, combined with `-q` this will silently make all changes with no output at all
-`-d` / `--dry` will only show would-be changes without applying any changes. This is essentially the opposite of `-y` with which it is mutually exclusive. `-d` is also mutually exclusive with `-q` as such a command would do nothing.
+`-q` / `--quiet` is quiet mode and will suppress all output (besides user prompts)  
+`-y` / `--confirm` will suppress confirmation and apply all changes without prompting, combined with `-q` this will silently make all changes with no output at all  
+`-d` / `--dry` will only show would-be changes without applying any changes. This is essentially the opposite of `-y` with which it is mutually exclusive. `-d` is also mutually exclusive with `-q` as such a command would do nothing.  
 
 For `search` and `replace`, which by default expect STDIN to provide a list of files (if piped in), it may instead be required to treat data from STDIN as text to search or replace.
-`-i` / `--stdin` accomplishes this, telling GOSR to treat stdin as text for searching and replacing. In the case of `gosr replace` the replacement text will be written to STDOUT and will always be performed regardless of the whether or not `-d` was provided (nor if `N` was used to answer a prompt)
+`-i` / `--stdin` accomplishes this, telling GOSR to treat stdin as text for searching and replacing. In the case of `gosr replace` the replacement text will be written to STDOUT and will always be performed regardless of the whether or not `-d` was provided (nor if `N` was used to answer a prompt)  
 
 Note the difference between these two chained commands:
 
