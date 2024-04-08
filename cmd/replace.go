@@ -119,6 +119,6 @@ func replaceLines(path string, re *regexp.Regexp, replacePattern string) error {
 		outFile.WriteString("\n")
 	}
 
-	// now replace original file iwth tmp
+	// now replace original file with tmp
 	return os.Rename(tmpPath, path)
 }

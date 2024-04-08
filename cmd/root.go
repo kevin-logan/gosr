@@ -26,18 +26,6 @@ func Execute() {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
-
-	// gosr find <regex>
-	//		outputs list of files
-	// gosr move <regex> <replace_regex>
-	// 		outputs list of renamed files
-	// gosr search <regex>
-	//		takes list of files to search
-	// gosr replace <regex> <replace_regex>
-	// 		takes list of files to search
-
-	// e.g.:
-	// gosr move '.*\.h$' '$1.hpp' -s | gosr search '#include ".*?\.h" '#include "$1.hpp"'
 }
 
 func init() {

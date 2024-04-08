@@ -25,9 +25,7 @@ var (
 				return err
 			}
 
-			items := make(chan string)
-			error := make(chan error)
-			go gosrWalk(".", re, recurse, items, error)
+			items, error := gosrWalk(".", re, recurse)
 
 		pollLoop:
 			for {
@@ -51,15 +49,23 @@ var (
 	}
 )
 
-func gosrWalk(path string, re *regexp.Regexp, recurse bool, out chan string, errorOut chan error) {
-	// ensure output is closed when we're done so reader can finish
-	defer close(out)
+func gosrWalk(path string, re *regexp.Regexp, recurse bool) (chan string, chan error) {
+	out := make(chan string)
+	errorOut := make(chan error)
 
-	err := walkImpl(path, re, recurse, out)
+	go func() {
+		// ensure output is closed when we're done so reader can know when to stop
+		defer close(out)
+		defer close(errorOut)
 
-	if err != nil {
-		errorOut <- err
-	}
+		err := walkImpl(path, re, recurse, out)
+
+		if err != nil {
+			errorOut <- err
+		}
+	}()
+
+	return out, errorOut
 }
 
 func walkImpl(path string, re *regexp.Regexp, recurse bool, out chan string) error {

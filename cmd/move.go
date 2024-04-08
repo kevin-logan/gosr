@@ -35,9 +35,7 @@ var (
 				return err
 			}
 
-			items := make(chan string)
-			errorOut := make(chan error)
-			go gosrWalk(".", re, recurse, items, errorOut)
+			items, errorOut := gosrWalk(".", re, recurse)
 
 		pollLoop:
 			for {
