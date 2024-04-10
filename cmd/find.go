@@ -8,9 +8,22 @@ import (
 	"github.com/spf13/cobra"
 )
 
+func addFindCommand(cmd *cobra.Command) {
+	cmd.Flags().BoolVarP(&recurse, "recursive", "r", false, "Search for matching files recursively in subdirectories")
+	rootCmd.AddCommand(cmd)
+}
+
 func init() {
-	findCommand.Flags().BoolVarP(&recurse, "recursive", "r", false, "Search for matching files recursively in subdirectories")
-	rootCmd.AddCommand(findCommand)
+	addFindCommand(findCommand)
+	addFindCommand(findCppCommand)
+	addFindCommand(findGoCommand)
+	addFindCommand(findPhpCommand)
+	addFindCommand(findPythonCommand)
+	addFindCommand(findRustCommand)
+	addFindCommand(findXmlCommand)
+	addFindCommand(findJsonCommand)
+	addFindCommand(findJavaCommand)
+	addFindCommand(findJsCommand)
 }
 
 var (
@@ -45,6 +58,87 @@ var (
 
 			// success if we reached here without error
 			return nil
+		},
+	}
+	findCppCommand = &cobra.Command{
+		Use:   "find-cpp",
+		Short: "find files matching a preprogrammed C++ file matching regex pattern",
+		Args:  cobra.MatchAll(cobra.ExactArgs(0), cobra.OnlyValidArgs),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			args = append(args, `\.(h|hh|hpp|cpp|cxx|cc|c|mxx|tcc|txx)$`)
+			return findCommand.RunE(cmd, args)
+		},
+	}
+	findGoCommand = &cobra.Command{
+		Use:   "find-go",
+		Short: "find files matching a preprogrammed Go file matching regex pattern",
+		Args:  cobra.MatchAll(cobra.ExactArgs(0), cobra.OnlyValidArgs),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			args = append(args, `\.go$`)
+			return findCommand.RunE(cmd, args)
+		},
+	}
+	findPhpCommand = &cobra.Command{
+		Use:   "find-php",
+		Short: "find files matching a preprogrammed PHP file matching regex pattern",
+		Args:  cobra.MatchAll(cobra.ExactArgs(0), cobra.OnlyValidArgs),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			args = append(args, `\.(php|inc)$`)
+			return findCommand.RunE(cmd, args)
+		},
+	}
+	findPythonCommand = &cobra.Command{
+		Use:   "find-python",
+		Short: "find files matching a preprogrammed Python file matching regex pattern",
+		Args:  cobra.MatchAll(cobra.ExactArgs(0), cobra.OnlyValidArgs),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			args = append(args, `\.py$`)
+			return findCommand.RunE(cmd, args)
+		},
+	}
+	findRustCommand = &cobra.Command{
+		Use:   "find-rust",
+		Short: "find files matching a preprogrammed Rust file matching regex pattern",
+		Args:  cobra.MatchAll(cobra.ExactArgs(0), cobra.OnlyValidArgs),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			args = append(args, `\.rs$`)
+			return findCommand.RunE(cmd, args)
+		},
+	}
+	findXmlCommand = &cobra.Command{
+		Use:   "find-xml",
+		Short: "find files matching a preprogrammed XML file matching regex pattern",
+		Args:  cobra.MatchAll(cobra.ExactArgs(0), cobra.OnlyValidArgs),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			args = append(args, `\.xml$`)
+			return findCommand.RunE(cmd, args)
+		},
+	}
+	findJsonCommand = &cobra.Command{
+		Use:   "find-json",
+		Short: "find files matching a preprogrammed JSON file matching regex pattern",
+		Args:  cobra.MatchAll(cobra.ExactArgs(0), cobra.OnlyValidArgs),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			args = append(args, `\.json$`)
+			return findCommand.RunE(cmd, args)
+		},
+	}
+	findJavaCommand = &cobra.Command{
+		Use:   "find-java",
+		Short: "find files matching a preprogrammed Java file matching regex pattern",
+		Args:  cobra.MatchAll(cobra.ExactArgs(0), cobra.OnlyValidArgs),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			args = append(args, `\.java$`)
+			return findCommand.RunE(cmd, args)
+		},
+	}
+	findJsCommand = &cobra.Command{
+		Use:   "find-js",
+		Short: "find files matching a preprogrammed JavaScript file matching regex pattern",
+		Args:  cobra.MatchAll(cobra.ExactArgs(0), cobra.OnlyValidArgs),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			args = append(args, `\.js$`)
+			return findCommand.RunE(cmd, args)
 		},
 	}
 )

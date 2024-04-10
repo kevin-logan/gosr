@@ -3,6 +3,7 @@ package cmd
 import (
 	"errors"
 	"io"
+	"io/fs"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -14,14 +15,16 @@ func init() {
 	moveCommand.Flags().BoolVarP(&recurse, "recursive", "r", false, "Search for matching files recursively in subdirectories")
 	moveCommand.Flags().BoolVarP(&simpleOutput, "simple", "s", false, "Simple output - omit original filenames, implies --confirm. This allows chaining a move into another command like search or replace")
 	moveCommand.Flags().BoolVarP(&byCopy, "copy", "c", false, "Copy files to destination instead of moving")
+	moveCommand.Flags().Uint32VarP(&newDirPerms, "dirperms", "p", 0755, "The permissions to use for any new directories that need to be created")
 
 	rootCmd.AddCommand(moveCommand)
 }
 
 var (
-	simpleOutput = false
-	byCopy       = false
-	moveCommand  = &cobra.Command{
+	simpleOutput        = false
+	byCopy              = false
+	newDirPerms  uint32 = 0755
+	moveCommand         = &cobra.Command{
 		Use:   "move <FILE PATTERN> <REPLACEMENT PATTERN>",
 		Short: "move files matching a regex pattern to a new replaced filepath",
 		Args:  cobra.MatchAll(cobra.ExactArgs(2), cobra.OnlyValidArgs),
@@ -66,7 +69,7 @@ var (
 					if confirmed {
 						// first thing is make sure the directory structure up to the new path exists
 						newParentDirectory := filepath.Dir(newName)
-						err = os.MkdirAll(newParentDirectory, 0755) // this won't do anything if the path already exists
+						err = os.MkdirAll(newParentDirectory, fs.FileMode(newDirPerms)) // this won't do anything if the path already exists
 						if err != nil {
 							return err
 						}
@@ -94,6 +97,11 @@ var (
 
 // implementation based on https://stackoverflow.com/a/21067803
 func copyFile(src string, dest string) (err error) {
+	srcStat, err := os.Stat(src)
+	if err != nil {
+		return
+	}
+
 	// open source file
 	in, err := os.Open(src)
 	if err != nil {
@@ -105,6 +113,9 @@ func copyFile(src string, dest string) (err error) {
 
 	// create/truncate destination file
 	out, err := os.Create(dest)
+
+	// set new file permissions to match source file
+	out.Chmod(srcStat.Mode().Perm())
 	if err != nil {
 		return
 	}
