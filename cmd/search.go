@@ -81,13 +81,13 @@ var (
 							// just bail as soon as we have an error
 							return err
 						}
-					case line_info, ok := <-v.items:
+					case lineInfo, ok := <-v.items:
 						if !ok {
 							// channel is closed, we've read all input
 							break pollLoop
 						}
 
-						output("%v\n", line_info)
+						output("%v\n", lineInfo)
 					}
 				}
 			}
