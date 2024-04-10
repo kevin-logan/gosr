@@ -10,6 +10,7 @@ import (
 
 func addFindCommand(cmd *cobra.Command) {
 	cmd.Flags().BoolVarP(&recurse, "recursive", "r", false, "Search for matching files recursively in subdirectories")
+	cmd.Flags().BoolVarP(&flip, "flip", "f", false, "Flip results: only output non-matches")
 	rootCmd.AddCommand(cmd)
 }
 
@@ -28,6 +29,7 @@ func init() {
 
 var (
 	recurse     = false
+	flip        = false
 	findCommand = &cobra.Command{
 		Use:   "find <FILE PATTERN>",
 		Short: "find files matching a regex pattern",
@@ -171,7 +173,8 @@ func walkImpl(path string, re *regexp.Regexp, recurse bool, out chan string) err
 
 	for _, item := range items {
 		name := fmt.Sprintf("%v/%v", path, item.Name())
-		if re.MatchString(name) {
+		matches := re.MatchString(name)
+		if matches == !flip {
 			out <- name
 		}
 

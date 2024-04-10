@@ -11,6 +11,7 @@ import (
 
 func init() {
 	searchCommand.Flags().BoolVarP(&stdinAsText, "stdin", "i", false, "Treat stdin as text to search (versus a list of files to search)")
+	searchCommand.Flags().BoolVarP(&flip, "flip", "f", false, "Flip results: only output non-matches")
 
 	rootCmd.AddCommand(searchCommand)
 }
@@ -122,7 +123,9 @@ func readLinesFromFile(file *os.File, path *string, re *regexp.Regexp, item *sea
 	for scanner.Scan() {
 		lineNum++
 		line := scanner.Text()
-		if re.MatchString(line) {
+		matches := re.MatchString(line)
+
+		if matches == !flip {
 			if path == nil {
 				item.items <- line
 			} else {
